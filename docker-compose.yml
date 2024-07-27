@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  mongo:
+    image: mongo
+    container_name: mongo_c
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+
+  server:
+    build: ./server
+    container_name: server_c
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+    volumes:
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - MONGO_URL=mongodb+srv://hazemfarhati:12345@all.yu7ecuf.mongodb.net/e-learning1?retryWrites=true&w=majority&appName=all
+
+  frontend:
+    build:
+      context: ./client
+    container_name: frontend_c
+    ports:x 
+      - "3000:3000"
+    volumes:
+      - ./client:/usr/src/app
+    environment:
+      - NODE_ENV=development
+
+volumes:
+  mongo-data:
