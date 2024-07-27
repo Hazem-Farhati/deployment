@@ -28,6 +28,10 @@ app.use("/Meet", require("./routes/meetRoute"));
 //get port from .env
 PORT = process.env.PORT;
 
+/* GET home page. */
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'Express' });
+});
 
 app.use(express.static('../client/build'))
 app.get("*", (req, res) => {
