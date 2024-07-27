@@ -1,17 +1,18 @@
 const express = require("express");
 const cors = require("cors");
 const db_connect = require("./config/db_connect");
+const path = require("path"); // Import path module
 require("dotenv").config();
 const app = express();
 
-//connect to database
+// Connect to database
 db_connect();
 app.use(express.json({ limit: "10000mb" })); // Set the limit for JSON payloads
-//add cors
+
+// Add CORS
 app.use(cors());
 
-//our routes
-
+// Define our routes
 app.use("/user", require("./routes/userRoute"));
 app.use("/pack", require("./routes/packRoute"));
 app.use("/cours", require("./routes/coursRoute"));
@@ -24,20 +25,31 @@ app.use("/answer", require("./routes/answerRoute"));
 app.use("/answerstudent", require("./routes/answerStudentRoute"));
 app.use("/Meet", require("./routes/meetRoute"));
 
+// Get port from .env
+const PORT = process.env.PORT || 5000;
 
-//get port from .env
-PORT = process.env.PORT;
-
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+// GET home page
+app.get("/", function (req, res, next) {
+  res.render("index", { title: "Express" });
 });
 
-app.use(express.static('../client/build'))
+// Serve static files from React app
+app.use(express.static(path.join(__dirname, "../client/build")));
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname,"client","build","index.html"))
-})
-//test our server
-app.listen(PORT, (err) =>
-  err ? console.log(err) : console.log("server is running")
-);
+  res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something broke!");
+});
+
+// Test our server
+app.listen(PORT, (err) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log(`Server is running on port ${PORT}`);
+  }
+});
