@@ -35,11 +35,6 @@ app.use("/Meet", require("./routes/meetRoute"));
 // Get port from .env
 const PORT = process.env.PORT || 5000;
 
-// GET home page
-app.get("/", function (req, res, next) {
-  res.render("index", { title: "Express" });
-});
-
 // Serve static files from React app
 app.use(express.static(path.join(__dirname, "../client/build")));
 app.get("*", (req, res) => {
