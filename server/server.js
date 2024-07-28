@@ -10,7 +10,14 @@ db_connect();
 app.use(express.json({ limit: "10000mb" })); // Set the limit for JSON payloads
 
 // Add CORS
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN || "*", // Set specific origins if needed
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+    optionsSuccessStatus: 204,
+  })
+);
 
 // Define our routes
 app.use("/user", require("./routes/userRoute"));
